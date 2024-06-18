@@ -30,7 +30,9 @@ pub fn dbx_str_lowercase(s: &str) -> String {
 
 /// Check whether two strings are equal, ignoring case. See [`dbx_lowercase`].
 pub fn dbx_eq_ignore_case(a: &str, b: &str) -> bool {
-    a.chars().map(dbx_lowercase).eq(b.chars().map(dbx_lowercase))
+    a.chars()
+        .map(dbx_lowercase)
+        .eq(b.chars().map(dbx_lowercase))
 }
 
 /// Returns a string slice with the prefix removed, ignoring case. See [`dbx_lowercase`] and
@@ -51,7 +53,7 @@ pub fn dbx_strip_prefix_ignore_case<'a>(s: &'a str, prefix: &str) -> Option<&'a 
 
 #[cfg(test)]
 mod test {
-    use crate::{dbx_str_lowercase, dbx_lowercase, MAP};
+    use crate::{dbx_lowercase, dbx_str_lowercase, MAP};
 
     #[test]
     fn examples() {
