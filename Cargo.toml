@@ -3,19 +3,12 @@ name = "dbxcase"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-phf = "0.11.2"
-
-[dependencies.phf_codegen]
-optional = true
-version = "0.11.2"
-
 [dependencies.ureq]
 optional = true
 version = "2.9.7"
 
 [features]
-generate = ["dep:phf_codegen", "dep:ureq"]
+generate = ["dep:ureq"]
 
 [[bin]]
 name = "generate"

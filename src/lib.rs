@@ -6,19 +6,21 @@
 //! For every character in the Unicode 4.1 character database which has a "simple lowercase mapping"
 //! property, it replaces it with the corresponding character.
 //!
-//! The mapping is pre-generated for speed and size, but the code can be regenerated manually from
-//! the Unicode database using an included program in the codebase.
+//! The mapping is hardcoded, but the code can be regenerated manually from the Unicode database
+//! using an included program in the codebase.
 
-mod precompiled;
+mod generated;
 
 /// The mapping from upper-case characters to lower-case characters.
-pub use precompiled::MAP;
+pub use generated::MAP;
 
 /// Case-fold a character to lower-case, using the same rules as Dropbox uses for file paths.
 /// If the character is not an upper-case character according to the mapping, returns the original
 /// character unchanged.
 pub fn dbx_tolower(c: char) -> char {
-    MAP.get(&c).cloned().unwrap_or(c)
+    MAP.binary_search_by(|(upper, _)| upper.cmp(&c))
+        .map(|i| MAP[i].1)
+        .unwrap_or(c)
 }
 
 /// Case-fold a string to lower-case. See [`dbx_tolower`].
@@ -32,7 +34,7 @@ mod test {
 
     #[test]
     fn test() {
-        assert_eq!(crate::precompiled::MAP.len(), 893);
+        assert_eq!(crate::generated::MAP.len(), 893);
         assert_eq!('a', dbx_tolower('A'));
         assert_eq!('a', dbx_tolower('a'));
         assert_eq!('i', dbx_tolower('İ')); // capital dotted I goes to plain ascii i
