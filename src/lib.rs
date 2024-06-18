@@ -30,11 +30,11 @@ pub fn dbx_str_tolower(s: &str) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::{dbx_str_tolower, dbx_tolower};
+    use crate::{dbx_str_tolower, dbx_tolower, MAP};
 
     #[test]
-    fn test() {
-        assert_eq!(crate::generated::MAP.len(), 893);
+    fn examples() {
+        assert_eq!(MAP.len(), 893);
         assert_eq!('a', dbx_tolower('A'));
         assert_eq!('a', dbx_tolower('a'));
         assert_eq!('i', dbx_tolower('İ')); // capital dotted I goes to plain ascii i
@@ -43,5 +43,18 @@ mod test {
         assert_eq!('\u{1F80}', dbx_tolower('\u{1F88}')); // GREEK CAPITAL LETTER ALPHA WITH PSILI AND PROSGEGRAMMENI
 
         assert_eq!("hi thére", dbx_str_tolower("Hİ THÉRE"));
+    }
+
+    #[test]
+    fn test_mapping() {
+        let mut upper_str = String::new();
+        let mut lower_str = String::new();
+        for (upper, lower) in MAP {
+            assert_eq!(dbx_tolower(*upper), *lower);
+            assert_eq!(dbx_tolower(*lower), *lower);
+            upper_str.push(*upper);
+            lower_str.push(*lower);
+        }
+        assert_eq!(dbx_str_tolower(&upper_str), lower_str);
     }
 }
