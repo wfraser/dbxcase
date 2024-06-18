@@ -6,21 +6,30 @@
 //! For every character in the Unicode 4.1 character database which has a "simple lowercase mapping"
 //! property, it replaces it with the corresponding character.
 //!
+//! This is different from a proper lowercasing, where at least one upper-case codepoint (U+0130,
+//! "Latin Capital Letter I with Dot Above") maps to two lower-case codepoints. It also uses a very
+//! old version of Unicode which lacks many characters added since 2003.
+//!
 //! The mapping is hardcoded, but the code can be regenerated manually from the Unicode database
 //! using an included program in the codebase.
 
 mod generated;
 
-/// The mapping from upper-case characters to lower-case characters.
+/// The mapping from upper-case characters to lower-case characters, excluding ASCII A-Z (check for
+/// those separately, since they are so common).
 pub use generated::MAP;
 
 /// Case-fold a character to lower-case, using the same rules as Dropbox uses for file paths.
 /// If the character is not an upper-case character according to the mapping, returns the original
 /// character unchanged.
 pub fn dbx_lowercase(c: char) -> char {
-    MAP.binary_search_by(|(upper, _)| upper.cmp(&c))
-        .map(|i| MAP[i].1)
-        .unwrap_or(c)
+    if c.is_ascii() {
+        c.to_ascii_lowercase()
+    } else {
+        MAP.binary_search_by(|(upper, _)| upper.cmp(&c))
+            .map(|i| MAP[i].1)
+            .unwrap_or(c)
+    }
 }
 
 /// Case-fold a string to lower-case. See [`dbx_lowercase`].
@@ -57,7 +66,7 @@ mod test {
 
     #[test]
     fn test_lowercase() {
-        assert_eq!(MAP.len(), 893);
+        assert_eq!(MAP.len(), 893 - 26); // A-Z (26 letters) omitted
         assert_eq!('a', dbx_lowercase('A'));
         assert_eq!('a', dbx_lowercase('a'));
         assert_eq!('i', dbx_lowercase('İ')); // capital dotted I goes to plain ascii i

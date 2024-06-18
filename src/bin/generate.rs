@@ -43,6 +43,16 @@ fn main() {
         let lower = char::from_u32(u32::from_str_radix(lowercode, 16).expect("invalid codepoint"))
             .expect("invalid character");
 
+        if upper.is_ascii() {
+            // These are handled separately, so don't include them in the mapping.
+            assert_eq!(
+                upper.to_ascii_lowercase(),
+                lower,
+                "ASCII codepoint doesn't follow ASCII casing rules"
+            );
+            continue;
+        }
+
         writeln!(out, "    ({upper:?}, {lower:?}),").expect("src/generated.rs write error");
     }
 
