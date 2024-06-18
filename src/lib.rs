@@ -53,10 +53,10 @@ pub fn dbx_strip_prefix_ignore_case<'a>(s: &'a str, prefix: &str) -> Option<&'a 
 
 #[cfg(test)]
 mod test {
-    use crate::{dbx_lowercase, dbx_str_lowercase, MAP};
+    use super::*;
 
     #[test]
-    fn examples() {
+    fn test_lowercase() {
         assert_eq!(MAP.len(), 893);
         assert_eq!('a', dbx_lowercase('A'));
         assert_eq!('a', dbx_lowercase('a'));
@@ -66,6 +66,21 @@ mod test {
         assert_eq!('\u{1F80}', dbx_lowercase('\u{1F88}')); // GREEK CAPITAL LETTER ALPHA WITH PSILI AND PROSGEGRAMMENI
 
         assert_eq!("hi thére", dbx_str_lowercase("Hİ THÉRE"));
+    }
+
+    #[test]
+    fn test_helpers() {
+        assert_eq!(
+            Some("_SUFFIX"),
+            dbx_strip_prefix_ignore_case("SİX_SUFFIX", "six")
+        );
+        assert_eq!(None, dbx_strip_prefix_ignore_case("ABC", "abcd"));
+        assert_eq!(Some("ABC"), dbx_strip_prefix_ignore_case("ABC", ""));
+        assert!(dbx_eq_ignore_case("Ⓗİ THÉRE", "ⓗi thére"));
+        assert!(!dbx_eq_ignore_case("ABCD", "abcde"));
+        assert!(dbx_eq_ignore_case("", ""));
+        assert!(!dbx_eq_ignore_case("x", ""));
+        assert!(!dbx_eq_ignore_case("", "x"));
     }
 
     #[test]
