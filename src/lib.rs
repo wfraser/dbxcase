@@ -69,10 +69,24 @@ mod test {
         assert_eq!(MAP.len(), 893 - 26); // A-Z (26 letters) omitted
         assert_eq!('a', dbx_lowercase('A'));
         assert_eq!('a', dbx_lowercase('a'));
-        assert_eq!('i', dbx_lowercase('İ')); // capital dotted I goes to plain ascii i
         assert_eq!('ⓜ', dbx_lowercase('Ⓜ'));
-        assert_eq!('\u{B5}', dbx_lowercase('\u{B5}')); // MICRO SIGN
-        assert_eq!('\u{1F80}', dbx_lowercase('\u{1F88}')); // GREEK CAPITAL LETTER ALPHA WITH PSILI AND PROSGEGRAMMENI
+
+        // Capital dotted I should be lowercased to two codepoints: plain ascii 'i' and combining
+        // dot above (which is visually redundant).
+        // Python 2.5 just lowercases it to ascii 'i'.
+        assert_eq!('i', dbx_lowercase('İ'));
+
+        // U+1F88 Greek Capital Letter Alpha With Psili And Prosgegrammeni
+        // A modern implementation would lowercase this to two codepoints: U+1F62 U+03B9
+        // Python 2.5 lowercases it to U+1F80 Greek Small Letter Alpha with Psili and Ypogegrammeni
+        assert_eq!('\u{1F80}', dbx_lowercase('\u{1F88}'));
+
+        // U+A64A Cyrillic Capital Letter Monograph Uk
+        // Added in Unicode 5.1; Python 2.5 knows nothing about it and leaves it unchanged.
+        assert_eq!('Ꙋ', dbx_lowercase('Ꙋ'));
+
+        // Should properly be lowercased to "σσς" but Python 2.5 is not context-sensitive.
+        assert_eq!("σσσ", dbx_str_lowercase("ΣΣΣ"));
 
         assert_eq!("hi thére", dbx_str_lowercase("Hİ THÉRE"));
     }
