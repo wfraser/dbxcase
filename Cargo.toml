@@ -1,7 +1,13 @@
 [package]
 name = "dbxcase"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+authors = ["Bill Fraser <bill@wfraser.dev>"]
+description = "Dropbox-compatible case-folding algorithm"
+keywords = ["dropbox"]
+repository = "https://github.com/wfraser/dbxcase"
+license = "MIT/Apache-2.0"
+readme = "README.md"
 
 [dependencies.ureq]
 optional = true
