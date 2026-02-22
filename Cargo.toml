@@ -1,6 +1,6 @@
 [package]
 name = "dbxcase"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Bill Fraser <bill@wfraser.dev>"]
 description = "Dropbox-compatible case-folding algorithm"
