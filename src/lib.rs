@@ -98,7 +98,9 @@ mod test {
             dbx_strip_prefix_ignore_case("SİX_SUFFIX", "six")
         );
         assert_eq!(None, dbx_strip_prefix_ignore_case("ABC", "abcd"));
+        assert_eq!(Some(""), dbx_strip_prefix_ignore_case("ABC", "abc"));
         assert_eq!(Some("ABC"), dbx_strip_prefix_ignore_case("ABC", ""));
+        assert_eq!(None, dbx_strip_prefix_ignore_case("ABC", "ABZ"));
         assert!(dbx_eq_ignore_case("Ⓗİ THÉRE", "ⓗi thére"));
         assert!(!dbx_eq_ignore_case("ABCD", "abcde"));
         assert!(dbx_eq_ignore_case("", ""));
