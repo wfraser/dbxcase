@@ -39,9 +39,9 @@ pub fn dbx_str_lowercase(s: &str) -> String {
 
 /// Check whether two strings are equal, ignoring case. See [`dbx_lowercase`].
 pub fn dbx_eq_ignore_case(a: &str, b: &str) -> bool {
-    a.chars()
-        .map(dbx_lowercase)
-        .eq(b.chars().map(dbx_lowercase))
+    let al = a.chars().map(dbx_lowercase);
+    let bl = b.chars().map(dbx_lowercase);
+    al.eq(bl)
 }
 
 /// Returns a string slice with the prefix removed, ignoring case. See [`dbx_lowercase`] and
