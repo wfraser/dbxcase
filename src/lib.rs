@@ -47,17 +47,21 @@ pub fn dbx_eq_ignore_case(a: &str, b: &str) -> bool {
 /// Returns a string slice with the prefix removed, ignoring case. See [`dbx_lowercase`] and
 /// [`str::strip_prefix`].
 pub fn dbx_strip_prefix_ignore_case<'a>(s: &'a str, prefix: &str) -> Option<&'a str> {
-    let mut pfx_it = prefix.chars().map(dbx_lowercase);
-    let mut last = None;
-    let trimmed = s.trim_start_matches(|c: char| {
-        last = pfx_it.next();
-        last == Some(dbx_lowercase(c))
-    });
-    if last.is_some() {
-        None
-    } else {
-        Some(trimmed)
+    let mut s_chars = s.chars();
+    let mut pfx_chars = prefix.chars();
+    while let Some(p) = pfx_chars.next().map(dbx_lowercase) {
+        let Some(c) = s_chars.next().map(dbx_lowercase) else {
+            // s exhausted before prefix
+            return None;
+        };
+
+        if p != c {
+            // prefix does not match
+            return None;
+        }
     }
+    // all prefix chars matched; return whatever remains
+    Some(s_chars.as_str())
 }
 
 #[cfg(test)]
